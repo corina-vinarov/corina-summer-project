@@ -7,7 +7,7 @@ library(stringr)
 library(readr)
 library(udunits2)
 
-current_data <- read_csv("Methane/CH4_7.18.csv",
+current_data <- read_csv("CH4_7.18.csv",
                          trim_ws = TRUE,
                          #0       10        20        30
                          #123456789012345678901234567890123456                     
@@ -37,6 +37,7 @@ good_data %>%
 
 #filter out units that we aren't going to use at this time
 
+#select just columns for unit transformation
 good_data %>%
   select(Study_number, RN, CH4_annual, CH4_growingseason, CH4_monthly,
          `CH4-C_converted`, Season_converted, N, CH4_flux_unit,
@@ -94,10 +95,13 @@ annual %>%
          flux_sd = flux_sd*cf) %>%
   select(-c(`CH4-C_converted`, Season_converted)) -> combined
 
+#all fluxes are in one column but not yet in the same unit
+#line 100-101 will remove any studies with insufficient data for meta analysis
+#only run if complete cases are needed
 combined %>%
-  filter(complete.cases(.)) -> tidy_data
+  filter(complete.cases(.)) -> combined
 
-tidy_data %>%
+combined %>%
   select(CH4_flux_unit_V2) %>%
   unique(.)
 
@@ -113,7 +117,9 @@ tidy_data %>%
 # 10 μg/m2/s 
 
 #put all fluxes and their error in mg CH4 per meter squared per hour
-tidy_data %>%
+#WARNING
+#study number 23030 passes through this argument unconverted
+combined %>%
   mutate(stnd_flux = ud.convert(converted, CH4_flux_unit_V2, "mg/m2/h"),
          stnd_flux_sd = ud.convert(flux_sd, CH4_flux_unit_V2, "mg/m2/h")) %>%
   select(-c(flux, flux_sd, CH4_flux_unit, CH4_flux_unit_V2,
@@ -162,5 +168,14 @@ tidy_metadata %>%
   filter(! is.na(Control)) -> data4meta
 
 
-
+library("metafor")
+methane_data<- escalc(n1i = Control_N, n2i = Manip_N,
+                      m1i = Control, m2i = Manip,
+                      sd1i = Control_sd, sd2i = Manip_sd,
+                      data = data4meta, measure = "SMD",
+                      slab = Study_number, append=TRUE)
+ma_model_1 <- rma(yi, vi, data = methane_data)
+print(summary(ma_model_1))
+forest(ma_model_1, slab = methane_data$Study_number)
+funnel(ma_model_1)
 
