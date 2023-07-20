@@ -179,10 +179,4 @@ print(summary(ma_model_1))
 forest(ma_model_1, slab = methane_data$Study_number)
 funnel(ma_model_1)
 
-#experimenting
-library(ggplot2)
 
-theme_set(theme_light())
-ma_model_1_plot <- ggplot(ma_model_1, aes(x=yi, y=vi)) +
-  geom_point(aes(color=yi, size=vi))
-print(ma_model_1_plot)

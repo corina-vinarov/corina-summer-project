@@ -5,30 +5,26 @@ output:
     html_document:
       theme: cerulean 
       toc: true
+      toc_float: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
 ## Initial data
 ```{r methane data}
 #Read in and clean-up data
-
 library(dplyr)
 library(tidyr)
 library(stringr)
 library(readr)
 library(udunits2)
-
-
 current_data <- read_csv("CH4_7.18.csv",
                          trim_ws = TRUE,
                          #0       10        20        30
                          #123456789012345678901234567890123456                     
                          col_types = "ccdddcdccccdddcccddddddccddddddccccc")
-
 current_data %>%
   filter(is.na(`Discard?`)) %>%
   select(-`Discard?`) -> good_data
@@ -150,10 +146,8 @@ current_data %>%
   right_join(tidy_standard_unit_data) -> metadata
 
 ```
-
 ## Methane data to Metafor
 ``` {r methane data to metafor}
-
 metadata %>%
   group_by(Study_number) %>%
   filter(Manipulation_V2 == "None") %>%
@@ -183,10 +177,8 @@ metadata %>%
                              "Soil_type", "Soil_drainage",
                              "period")) -> tidy_metadata
 
-
 tidy_metadata %>%
   filter(! is.na(Control)) -> data4meta
-
 
 library("metafor")
 methane_data<- escalc(n1i = Control_N, n2i = Manip_N,
@@ -203,7 +195,6 @@ print(summary(ma_model_1))
 ```{r methane graphs, echo=FALSE}
 forest(ma_model_1, slab = methane_data$Study_number)
 funnel(ma_model_1)
-
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
