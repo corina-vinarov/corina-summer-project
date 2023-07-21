@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Initial data
-```{r methane data}
+```{r methane data, include=FALSE}
 #Read in and clean-up data
 library(dplyr)
 library(tidyr)
