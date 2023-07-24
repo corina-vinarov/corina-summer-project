@@ -11,8 +11,19 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+## Abstract draft
+Abstract: 
 
-## Initial data
+Anthropogenic climate change is negatively affecting our planet and will continue to as the global population rises and resources become scarcer.  
+
+One of the main misconceptions surrounding climate change is that carbon dioxide (CO2) is the sole contributor to global warming, however, methane (CH4) has “25 times the global warming potential” and because of that “small changes of CH4 in the atmosphere significantly contribute to global warming” (Bridgham et al., 2013) *-rice paddies paper-* 
+
+Even though “Methane emissions have increased by 151% since 1750 (IPCC, 2007)” *- biochar paper-* there is a lack of understanding on the relationship between methane and different ecosystems compared to the research that exists on CO2. 
+
+(my specific area for meta-analysis methane research) 
+
+
+## Initial data (hidden)
 ```{r methane data, include=FALSE}
 #Read in and clean-up data
 library(dplyr)
