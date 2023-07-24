@@ -145,9 +145,6 @@ current_data %>%
          `same timescale as flux? (T/F)`, `if False, timescale`) %>%
   right_join(tidy_standard_unit_data) -> metadata
 
-```
-## Methane data to Metafor
-``` {r methane data to metafor}
 metadata %>%
   group_by(Study_number) %>%
   filter(Manipulation_V2 == "None") %>%
@@ -179,8 +176,11 @@ metadata %>%
 
 tidy_metadata %>%
   filter(! is.na(Control)) -> data4meta
-
 library("metafor")
+
+```
+## Methane data to Metafor
+``` {r methane data to metafor}
 methane_data<- escalc(n1i = Control_N, n2i = Manip_N,
                       m1i = Control, m2i = Manip,
                       sd1i = Control_sd, sd2i = Manip_sd,

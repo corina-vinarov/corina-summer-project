@@ -1489,54 +1489,6 @@ border-radius: 0px;
 </div>
 <div id="methane-data-to-metafor" class="section level2">
 <h2>Methane data to Metafor</h2>
-<pre class="r"><code>metadata %&gt;%
-  group_by(Study_number) %&gt;%
-  filter(Manipulation_V2 == &quot;None&quot;) %&gt;%
-  mutate(Control_SM = SM_value,
-         Control_SM_sd = SM_sd,
-         Control_SM_depth = SM_depth,
-         Control_N = N,
-         Control = stnd_flux,
-         Control_sd = stnd_flux_sd) %&gt;%
-  select(-c(RN, Manipulation_V2, Manipulation_level, SM_value, SM_sd, SM_depth, N, stnd_flux, stnd_flux_sd,
-            SM_unit, `same timescale as flux? (T/F)`,
-            `if False, timescale`)) -&gt; controls
-
-metadata %&gt;%
-  group_by(Study_number) %&gt;%
-  filter(Manipulation_V2 != &quot;None&quot;) %&gt;%
-  mutate(Manip_SM = SM_value,
-         Manip_SM_sd = SM_sd,
-         Manip_SM_depth = SM_depth,
-         Manip_N = N,
-         Manip = stnd_flux,
-         Manip_sd = stnd_flux_sd) %&gt;%
-  select(-c(RN, SM_value, SM_sd, SM_depth, N, stnd_flux, stnd_flux_sd)) %&gt;%
-  left_join(controls, by = c(&quot;Study_number&quot;, &quot;Study_midyear&quot;,
-                             &quot;Ecosystem_type&quot;, &quot;Latitude&quot;,
-                             &quot;Longitude&quot;, &quot;Elevation&quot;,
-                             &quot;Soil_type&quot;, &quot;Soil_drainage&quot;,
-                             &quot;period&quot;)) -&gt; tidy_metadata</code></pre>
-<pre><code>## Warning in left_join(., controls, by = c(&quot;Study_number&quot;, &quot;Study_midyear&quot;, : Detected an unexpected many-to-many relationship between `x` and `y`.
-## ℹ Row 8 of `x` matches multiple rows in `y`.
-## ℹ Row 15 of `y` matches multiple rows in `x`.
-## ℹ If a many-to-many relationship is expected, set `relationship =
-##   &quot;many-to-many&quot;` to silence this warning.</code></pre>
-<pre class="r"><code>tidy_metadata %&gt;%
-  filter(! is.na(Control)) -&gt; data4meta
-
-library(&quot;metafor&quot;)</code></pre>
-<pre><code>## Loading required package: Matrix</code></pre>
-<pre><code>## 
-## Attaching package: &#39;Matrix&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:tidyr&#39;:
-## 
-##     expand, pack, unpack</code></pre>
-<pre><code>## Loading required package: metadat</code></pre>
-<pre><code>## Loading required package: numDeriv</code></pre>
-<pre><code>## 
-## Loading the &#39;metafor&#39; package (version 4.2-0). For an
-## introduction to the package please type: help(metafor)</code></pre>
 <pre class="r"><code>methane_data&lt;- escalc(n1i = Control_N, n2i = Manip_N,
                       m1i = Control, m2i = Manip,
                       sd1i = Control_sd, sd2i = Manip_sd,
