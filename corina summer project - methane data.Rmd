@@ -14,13 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Abstract draft
 Abstract: 
 
-Anthropogenic climate change is negatively affecting our planet and will continue to as the global population rises and resources become scarcer.  
-
-One of the main misconceptions surrounding climate change is that carbon dioxide (CO2) is the sole contributor to global warming, however, methane (CH4) has “25 times the global warming potential” and because of that “small changes of CH4 in the atmosphere significantly contribute to global warming” (Bridgham et al., 2013) *-rice paddies paper-* 
-
-Even though “Methane emissions have increased by 151% since 1750 (IPCC, 2007)” *- biochar paper-* there is a lack of understanding on the relationship between methane and different ecosystems compared to the research that exists on CO2. 
-
-(my specific area for meta-analysis methane research) 
+Anthropogenic climate change is negatively affecting our planet and one of the main misconceptions surrounding climate change is that carbon dioxide (CO2) is the sole contributor to global warming. However, methane (CH4) has approximately 25 times the global warming potential compared to CO2 and the concentration of methane in the atmosphere is a key aspect in research.  Even though methane emissions have increased by 151% since the industrial revolution methane's role in global warming is relatively understudied. Researching methane in relation to agriculture is crucial as agricultural soil is both a methane sink and source. Fertilization’s effect on methane fluxes in soil aren’t well understood despite the importance of agriculture worldwide and the need to understand its role in climate change. A meta-analysis was conducted to identify the relationship between fertilization and CH4 flux levels in soil. The analysis found that__________. This result can be used in global methane models and to inform policies that help companies and farmers conduct best practices.   
 
 
 ## Initial data (hidden)
@@ -31,7 +25,7 @@ library(tidyr)
 library(stringr)
 library(readr)
 library(udunits2)
-current_data <- read_csv("CH4_7.18.csv",
+current_data <- read_csv("CH4_7.28.csv",
                          trim_ws = TRUE,
                          #0       10        20        30
                          #123456789012345678901234567890123456                     
