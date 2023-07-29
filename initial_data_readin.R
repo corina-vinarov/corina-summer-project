@@ -7,7 +7,7 @@ library(stringr)
 library(readr)
 library(udunits2)
 
-current_data <- read_csv("Methane/CH4_7.18.csv",
+current_data <- read_csv("CH4_7.29.csv",
                          trim_ws = TRUE,
                          #0       10        20        30
                          #123456789012345678901234567890123456                     
@@ -161,6 +161,17 @@ metadata %>%
 tidy_metadata %>%
   filter(! is.na(Control)) -> data4meta
 
+library(metafor)
+## Methane data to Metafor
+methane_data<- escalc(n1i = Control_N, n2i = Manip_N,
+                      m1i = Control, m2i = Manip,
+                      sd1i = Control_sd, sd2i = Manip_sd,
+                      data = data4meta, measure = "SMD",
+                      slab = Study_number, append=TRUE)
+ma_model_1 <- rma(yi, vi, data = methane_data)
+print(summary(ma_model_1))
 
+## Plots
 
-
+forest(ma_model_1, slab = methane_data$Study_number)
+funnel(ma_model_1)
