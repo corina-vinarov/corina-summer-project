@@ -166,10 +166,22 @@ library(metafor)
 methane_data<- escalc(n1i = Control_N, n2i = Manip_N,
                       m1i = Control, m2i = Manip,
                       sd1i = Control_sd, sd2i = Manip_sd,
-                      data = data4meta, measure = "SMD",
-                      slab = Study_number, append=TRUE)
-ma_model_1 <- rma(yi, vi, data = methane_data)
+                      data = data4meta, measure = "ROM",
+                      append=TRUE)
+
+ma_model_1 <- rma(yi, vi,
+                  random = ~ 1 | Study_number,
+                  mods = ~ Ecosystem_type,
+                  data = methane_data,
+                  slab = Study_number)
 print(summary(ma_model_1))
+
+ma_model_2 <- rma(yi, vi,
+                  random = ~ 1 | Study_number,
+                  mods = ~ Manipulation_V2,
+                  data = methane_data,
+                  slab = Study_number)
+print(summary(ma_model_2))
 
 ## Plots
 
