@@ -7,7 +7,7 @@ library(stringr)
 library(readr)
 library(udunits2)
 
-current_data <- read_csv("CH4_7.18.csv",
+current_data <- read_csv("CH4_7.28.csv",
                          trim_ws = TRUE,
                          #0       10        20        30
                          #123456789012345678901234567890123456                     
