@@ -179,4 +179,74 @@ print(summary(ma_model_1))
 forest(ma_model_1, slab = methane_data$Study_number)
 funnel(ma_model_1)
 
+# ADD TO R MARKDOWN FROM HERE ON DOWN!!!!!
+
+# V2=Ecosystem type
+#forest plot looking at effect sizes for all of agriculture, forest,pasture, & savanna
+V2<- escalc(n1i = Control_N, n2i = Manip_N,
+                      m1i = Control, m2i = Manip,
+                      sd1i = Control_sd, sd2i = Manip_sd,
+                      data = data4meta, measure = "SMD",
+                      slab = Ecosystem_type, append=TRUE)
+
+ma_model_2 <- rma.mv(yi, vi, data = V2,
+random = ~ 1 | Study_number,
+mods = ~ Ecosystem_type - 1,
+method = "REML")
+
+Coef_metaV2 <- coef(summary(ma_model_2))
+
+print(summary(ma_model_2))
+forest(Coef_metaV2$estimate,ci.lb = Coef_metaV2$ci.lb,
+       ci.ub =  Coef_metaV2$ci.ub ,
+       annotate = TRUE,slab=c("Agriculture","Forest","Pasture","Savanna"))
+funnel(ma_model_2)
+
+
+# V3=Manipulation_V2
+#another forest plot for manipulation effects (Manipulation_V2)
+V3<- escalc(n1i = Control_N, n2i = Manip_N,
+            m1i = Control, m2i = Manip,
+            sd1i = Control_sd, sd2i = Manip_sd,
+            data = data4meta, measure = "SMD",
+            slab = Manipulation_V2, append=TRUE)
+
+ma_model_3 <- rma.mv(yi, vi, data = V3,
+                     random = ~ 1 | Study_number,
+                     mods = ~ Manipulation_V2 - 1,
+                     method = "REML")
+
+Coef_metaV3 <- coef(summary(ma_model_3))
+
+print(summary(ma_model_3))
+forest(Coef_metaV3$estimate,ci.lb = Coef_metaV3$ci.lb,
+       ci.ub =  Coef_metaV3$ci.ub ,
+       annotate = TRUE,slab=c("Burning","Fertilization","Fumigation","Tilled"))
+funnel(ma_model_3)
+
+
+#
+# HOW DO I JUST DO AGRICULTURE UNDER ECOSYSTEM TYPE?????
+#
+
+# V4=Ecosystem_type -> agriculture
+V4<- escalc(n1i = Control_N, n2i = Manip_N,
+            m1i = Control, m2i = Manip,
+            sd1i = Control_sd, sd2i = Manip_sd,
+            data = data4meta, measure = "SMD",
+            slab = Ecosystem_type, append=TRUE)
+
+ma_model_4 <- rma.mv(yi, vi, data = V4,
+                     random = ~ 1 | Study_number,
+                     mods = ~ Ecosystem_type - 1,
+                     method = "REML")
+
+Coef_metaV4 <- coef(summary(ma_model_4))
+
+print(summary(ma_model_4))
+forest(Coef_metaV4$estimate,ci.lb = Coef_metaV4$ci.lb,
+       ci.ub =  Coef_metaV4$ci.ub ,
+       annotate = TRUE,slab=c("Agriculture"))
+funnel(ma_model_4)
+
 
