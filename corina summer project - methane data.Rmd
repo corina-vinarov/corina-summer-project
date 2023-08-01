@@ -197,7 +197,7 @@ print(summary(ma_model_1))
 
 ## Plots
 
-```{r methane graphs, echo=FALSE}
+```{r methane graphs, echo=FALSE, fig.width=11, fig.height=9}
 forest(ma_model_1, slab = methane_data$Study_number)
 funnel(ma_model_1)
 ```
