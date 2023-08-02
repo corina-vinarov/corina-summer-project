@@ -14,11 +14,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Abstract draft
 Abstract: 
 
-Anthropogenic climate change is negatively affecting our planet and one of the main misconceptions surrounding climate change is that carbon dioxide (CO2) is the sole contributor to global warming. However, methane (CH4) has approximately 25 times the global warming potential compared to CO2 and the concentration of methane in the atmosphere is a key aspect in research.  Even though methane emissions have increased by 151% since the industrial revolution methane's role in global warming is relatively understudied. Researching methane in relation to agriculture is crucial as agricultural soil is both a methane sink and source. Fertilization’s effect on methane fluxes in soil aren’t well understood despite the importance of agriculture worldwide and the need to understand its role in climate change. A meta-analysis was conducted to identify the relationship between fertilization and CH4 flux levels in soil. The analysis found that__________. This result can be used in global methane models and to inform policies that help companies and farmers conduct best practices.   
+Anthropogenic climate change is negatively affecting our planet and one of the main misconceptions surrounding climate change is that carbon dioxide (CO2) is the sole contributor to global warming. However, methane (CH4) has approximately 25 times the global warming potential compared to CO2 and the methane concentration in the atmosphere is a key part of this issue. Even though methane emissions have increased by 151% since the industrial revolution, methane's role in global warming is relatively understudied. Researching methane in relation to agriculture is crucial as agricultural soil is both a methane sink and source. Fertilization’s effect on methane fluxes in soil aren’t well understood despite the importance of agriculture worldwide and the need to understand its role in climate change. I conducted a meta-analysis to identify the relationship between fertilization and CH4 flux levels in soil. The analysis found that__________. This result can be used in global methane models and to inform policies that help companies and farmers conduct best practices.    
 
 
-## Initial data (hidden)
-```{r methane data, include=FALSE}
+## Initial data
+```{r methane data}
 #Read in and clean-up data
 library(dplyr)
 library(tidyr)
@@ -184,8 +184,11 @@ tidy_metadata %>%
 library("metafor")
 
 ```
-## Methane data to Metafor
-``` {r methane data to metafor, include=FALSE}
+## Meta-analysis code -> need help with manip effects in ag soil ma_model_ag
+
+```{r methane data meta-analysis code }
+
+#Effect size for methane from all data
 methane_data<- escalc(n1i = Control_N, n2i = Manip_N,
                       m1i = Control, m2i = Manip,
                       sd1i = Control_sd, sd2i = Manip_sd,
@@ -195,65 +198,85 @@ ma_model_1 <- rma(yi, vi, data = methane_data)
 print(summary(ma_model_1))
 
 
-# V2=Ecosystem type
-#forest plot looking at effect sizes for all of agriculture, forest,pasture, & savanna
-V2<- escalc(n1i = Control_N, n2i = Manip_N,
+
+#Ecosystem type (Ecosystem_type)
+Eco_type<- escalc(n1i = Control_N, n2i = Manip_N,
                       m1i = Control, m2i = Manip,
                       sd1i = Control_sd, sd2i = Manip_sd,
                       data = data4meta, measure = "SMD",
                       slab = Ecosystem_type, append=TRUE)
 
-ma_model_2 <- rma.mv(yi, vi, data = V2,
+Eco_model <- rma.mv(yi, vi, data = Eco_type,
 random = ~ 1 | Study_number,
 mods = ~ Ecosystem_type - 1,
 method = "REML")
 
-Coef_metaV2 <- coef(summary(ma_model_2))
-
-print(summary(ma_model_2))
-forest(Coef_metaV2$estimate,ci.lb = Coef_metaV2$ci.lb,
-       ci.ub =  Coef_metaV2$ci.ub ,
-       annotate = TRUE,slab=c("Agriculture","Forest","Pasture","Savanna"))
-funnel(ma_model_2)
+Coef_meta_Eco <- coef(summary(Eco_model))
+print(summary(Eco_model))
 
 
-# V3=Manipulation_V2
-#another forest plot for manipulation effects (Manipulation_V2)
-V3<- escalc(n1i = Control_N, n2i = Manip_N,
+#Manipulation effects (Manipulation_V2)
+Manip_type<- escalc(n1i = Control_N, n2i = Manip_N,
             m1i = Control, m2i = Manip,
             sd1i = Control_sd, sd2i = Manip_sd,
             data = data4meta, measure = "SMD",
             slab = Manipulation_V2, append=TRUE)
 
-ma_model_3 <- rma.mv(yi, vi, data = V3,
+Manip_model <- rma.mv(yi, vi, data = Manip_type,
                      random = ~ 1 | Study_number,
                      mods = ~ Manipulation_V2 - 1,
                      method = "REML")
 
-Coef_metaV3 <- coef(summary(ma_model_3))
+Coef_meta_Manip <- coef(summary(Manip_model))
+print(summary(Manip_model))
 
-print(summary(ma_model_3))
-forest(Coef_metaV3$estimate,ci.lb = Coef_metaV3$ci.lb,
-       ci.ub =  Coef_metaV3$ci.ub ,
-       annotate = TRUE,slab=c("Burning","Fertilization","Fumigation","Tilled"))
-funnel(ma_model_3)
+#Manipulation effects in agriculture soil
+ag_data<-filter(data4meta,Ecosystem_type=="Agriculture")
+Ag_type<- escalc(n1i = Control_N, n2i = Manip_N,
+            m1i = Control, m2i = Manip,
+            sd1i = Control_sd, sd2i = Manip_sd,
+            data = ag_data, measure = "SMD",
+            slab = Ecosystem_type, append=TRUE)
+
+ma_model_Ag <- rma.mv(yi, vi, data = Ag_type,
+                     random = ~ 1 | Study_number,
+                    #
+                    #mods line prevented anything from running - is it necessary?
+                    #  mods = ~ Ecosystem_type - 1,
+                    #
+                     method = "REML")
+
+Coef_meta_Ag <- coef(summary(ma_model_Ag))
+print(summary(ma_model_Ag))
+
 ```
-
-
 ## Plots
 
 ```{r methane graphs, echo=FALSE, fig.width=11, fig.height=9}
+# ADD TITLES TO GRAPHS
+
 forest(ma_model_1, slab = methane_data$Study_number)
-
-forest(Coef_metaV2$estimate,ci.lb = Coef_metaV2$ci.lb,
-       ci.ub =  Coef_metaV2$ci.ub ,
-       annotate = TRUE,slab=c("Agriculture","Forest","Pasture","Savanna"))
-
-forest(Coef_metaV3$estimate,ci.lb = Coef_metaV3$ci.lb,
-       ci.ub =  Coef_metaV3$ci.ub ,
-       annotate = TRUE,slab=c("Burning","Fertilization","Fumigation","Tilled"))
-
 funnel(ma_model_1)
+
+
+forest(Coef_meta_Eco$estimate,ci.lb = Coef_meta_Eco$ci.lb,
+       ci.ub =  Coef_meta_Eco$ci.ub ,
+       annotate = TRUE,slab=c("Agriculture","Forest","Pasture","Savanna"))
+funnel(Eco_model)
+
+
+
+forest(Coef_meta_Manip$estimate,ci.lb = Coef_meta_Manip$ci.lb,
+       ci.ub =  Coef_meta_Manip$ci.ub ,
+       annotate = TRUE,slab=c("Burning","Fertilization","Fumigation","Tilled"))
+funnel(Manip_model)
+
+
+
+forest(Coef_meta_Ag$estimate,ci.lb = Coef_meta_Ag$ci.lb,
+       ci.ub = Coef_meta_Ag$ci.ub ,
+       annotate = TRUE,slab=c("Agriculture"))
+funnel(ma_model_Ag)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
