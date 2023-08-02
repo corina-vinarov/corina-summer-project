@@ -177,6 +177,7 @@ methane_data<- escalc(n1i = Control_N, n2i = Manip_N,
 ma_model_1 <- rma(yi, vi, data = methane_data)
 print(summary(ma_model_1))
 forest(ma_model_1, slab = methane_data$Study_number)
+title(main="Effect size for methane from all data")
 funnel(ma_model_1)
 
 #Forest plot for ecosystem type (Ecosystem_type)
@@ -197,6 +198,7 @@ print(summary(Eco_model))
 forest(Coef_meta_Eco$estimate,ci.lb = Coef_meta_Eco$ci.lb,
        ci.ub =  Coef_meta_Eco$ci.ub ,
        annotate = TRUE,slab=c("Agriculture","Forest","Pasture","Savanna"))
+title(main="Ecosystem type")
 funnel(Eco_model)
 
 
@@ -218,6 +220,7 @@ print(summary(Manip_model))
 forest(Coef_meta_Manip$estimate,ci.lb = Coef_meta_Manip$ci.lb,
        ci.ub =  Coef_meta_Manip$ci.ub ,
        annotate = TRUE,slab=c("Burning","Fertilization","Fumigation","Tilled"))
+title(main="Manipulation effects")
 funnel(Manip_model)
 
 
@@ -244,6 +247,7 @@ print(summary(ma_model_Ag))
 forest(Coef_meta_Ag$estimate,ci.lb = Coef_meta_Ag$ci.lb,
        ci.ub = Coef_meta_Ag$ci.ub ,
        annotate = TRUE,slab=c("Agriculture"),title("Manipulation effect in agriculture soil"))
+title(main="Manipulation effects in agriculture soil")
 funnel(ma_model_Ag)
 
 
