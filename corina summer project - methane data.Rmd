@@ -186,6 +186,15 @@ library("metafor")
 ```
 ## Meta-analysis code
 
+The main meta-analysis dataset has `r nrow(data4meta)` rows:
+```{r table, echo=FALSE}
+data4meta %>% 
+  group_by(Ecosystem_type) %>% 
+  summarise(N = n()) %>% 
+  knitr::kable()
+```
+
+
 ```{r methane data meta-analysis code }
 
 #Effect size for methane from all data
