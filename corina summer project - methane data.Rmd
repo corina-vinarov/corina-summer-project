@@ -238,24 +238,18 @@ Manip_model <- rma.mv(yi, vi, data = Manip_type,
 
 Coef_meta_Manip <- coef(summary(Manip_model))
 print(summary(Manip_model))
-```
 
-## I need help with manip effects in ag soil ma_model_ag
-```{r}
 #Manipulation effects in agriculture soil
-ag_data<-filter(data4meta,Ecosystem_type=="Agriculture")
+Ag_mp_data <- filter(data4meta, Ecosystem_type == 'Agriculture', Manipulation_V2 == 'Fertilization')
 Ag_type<- escalc(n1i = Control_N, n2i = Manip_N,
                  m1i = Control, m2i = Manip,
                  sd1i = Control_sd, sd2i = Manip_sd,
-                 data = ag_data, measure = "SMD",
+                 data = Ag_mp_data, measure = "SMD",
                  slab = Ecosystem_type, append=TRUE)
 
 ma_model_Ag <- rma.mv(yi, vi, data = Ag_type,
                       random = ~ 1 | Study_number,
-                      #
-                      #mods line prevented anything from running - is it necessary?
-                      #  mods = ~ Ecosystem_type - 1,
-                      #
+                     mods = ~ Manipulation_V2 - 1,
                       method = "REML")
 
 Coef_meta_Ag <- coef(summary(ma_model_Ag))
@@ -265,12 +259,12 @@ print(summary(ma_model_Ag))
 ## Plots
 
 ```{r methane graphs, echo=FALSE, fig.width=11, fig.height=9}
-
+#all methane data
 forest(ma_model_1, slab = methane_data$Study_number)
 title(main="Effect size for methane from all data")
 funnel(ma_model_1)
 
-
+#different ecosystem type
 forest(Coef_meta_Eco$estimate,ci.lb = Coef_meta_Eco$ci.lb,
        ci.ub =  Coef_meta_Eco$ci.ub ,
        annotate = TRUE,slab=c("Agriculture","Forest","Pasture","Savanna"))
@@ -278,7 +272,7 @@ title(main="Ecosystem type")
 funnel(Eco_model)
 
 
-
+# all different manipulation effects
 forest(Coef_meta_Manip$estimate,ci.lb = Coef_meta_Manip$ci.lb,
        ci.ub =  Coef_meta_Manip$ci.ub ,
        annotate = TRUE,slab=c("Burning","Fertilization","Fumigation","Tilled"))
@@ -286,10 +280,11 @@ title(main="Manipulation effects")
 funnel(Manip_model)
 
 
-
+#fertilization and agricultural soils
 forest(Coef_meta_Ag$estimate,ci.lb = Coef_meta_Ag$ci.lb,
        ci.ub = Coef_meta_Ag$ci.ub ,
-       annotate = TRUE,slab=c("Agriculture"))
+       annotate = TRUE,slab=c("Agriculture"),title("Manipulation effect in agriculture soil"))
 title(main="Manipulation effects in agriculture soil")
 funnel(ma_model_Ag)
+
 ```

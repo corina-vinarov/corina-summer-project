@@ -226,19 +226,17 @@ funnel(Manip_model)
 
 
 #Forest plot for manipulation effects in agriculture soil
-ag_data<-filter(data4meta,Ecosystem_type=="Agriculture")
+
+Ag_mp_data <- filter(data4meta, Ecosystem_type == 'Agriculture', Manipulation_V2 == 'Fertilization')
 Ag_type<- escalc(n1i = Control_N, n2i = Manip_N,
             m1i = Control, m2i = Manip,
             sd1i = Control_sd, sd2i = Manip_sd,
-            data = ag_data, measure = "SMD",
+            data = Ag_mp_data, measure = "SMD",
             slab = Ecosystem_type, append=TRUE)
 
 ma_model_Ag <- rma.mv(yi, vi, data = Ag_type,
                      random = ~ 1 | Study_number,
-                    #
-                    #mods line prevented anything from running - is it necessary?
-                    #  mods = ~ Ecosystem_type - 1,
-                    #
+                    mods = ~ Manipulation_V2 - 1,
                      method = "REML")
 
 Coef_meta_Ag <- coef(summary(ma_model_Ag))
