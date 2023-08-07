@@ -186,6 +186,15 @@ library("metafor")
 ```
 ## Meta-analysis code
 
+The main meta-analysis dataset has `r nrow(data4meta)` rows:
+```{r table, echo=FALSE}
+data4meta %>% 
+  group_by(Ecosystem_type) %>% 
+  summarise(N = n()) %>% 
+  knitr::kable()
+```
+
+
 ```{r methane data meta-analysis code }
 
 #Effect size for methane from all data
@@ -201,15 +210,15 @@ print(summary(ma_model_1))
 
 #Ecosystem type (Ecosystem_type)
 Eco_type<- escalc(n1i = Control_N, n2i = Manip_N,
-                      m1i = Control, m2i = Manip,
-                      sd1i = Control_sd, sd2i = Manip_sd,
-                      data = data4meta, measure = "SMD",
-                      slab = Ecosystem_type, append=TRUE)
+                  m1i = Control, m2i = Manip,
+                  sd1i = Control_sd, sd2i = Manip_sd,
+                  data = data4meta, measure = "SMD",
+                  slab = Ecosystem_type, append=TRUE)
 
 Eco_model <- rma.mv(yi, vi, data = Eco_type,
-random = ~ 1 | Study_number,
-mods = ~ Ecosystem_type - 1,
-method = "REML")
+                    random = ~ 1 | Study_number,
+                    mods = ~ Ecosystem_type - 1,
+                    method = "REML")
 
 Coef_meta_Eco <- coef(summary(Eco_model))
 print(summary(Eco_model))
@@ -217,15 +226,15 @@ print(summary(Eco_model))
 
 #Manipulation effects (Manipulation_V2)
 Manip_type<- escalc(n1i = Control_N, n2i = Manip_N,
-            m1i = Control, m2i = Manip,
-            sd1i = Control_sd, sd2i = Manip_sd,
-            data = data4meta, measure = "SMD",
-            slab = Manipulation_V2, append=TRUE)
+                    m1i = Control, m2i = Manip,
+                    sd1i = Control_sd, sd2i = Manip_sd,
+                    data = data4meta, measure = "SMD",
+                    slab = Manipulation_V2, append=TRUE)
 
 Manip_model <- rma.mv(yi, vi, data = Manip_type,
-                     random = ~ 1 | Study_number,
-                     mods = ~ Manipulation_V2 - 1,
-                     method = "REML")
+                      random = ~ 1 | Study_number,
+                      mods = ~ Manipulation_V2 - 1,
+                      method = "REML")
 
 Coef_meta_Manip <- coef(summary(Manip_model))
 print(summary(Manip_model))
@@ -236,18 +245,18 @@ print(summary(Manip_model))
 #Manipulation effects in agriculture soil
 ag_data<-filter(data4meta,Ecosystem_type=="Agriculture")
 Ag_type<- escalc(n1i = Control_N, n2i = Manip_N,
-            m1i = Control, m2i = Manip,
-            sd1i = Control_sd, sd2i = Manip_sd,
-            data = ag_data, measure = "SMD",
-            slab = Ecosystem_type, append=TRUE)
+                 m1i = Control, m2i = Manip,
+                 sd1i = Control_sd, sd2i = Manip_sd,
+                 data = ag_data, measure = "SMD",
+                 slab = Ecosystem_type, append=TRUE)
 
 ma_model_Ag <- rma.mv(yi, vi, data = Ag_type,
-                     random = ~ 1 | Study_number,
-                    #
-                    #mods line prevented anything from running - is it necessary?
-                    #  mods = ~ Ecosystem_type - 1,
-                    #
-                     method = "REML")
+                      random = ~ 1 | Study_number,
+                      #
+                      #mods line prevented anything from running - is it necessary?
+                      #  mods = ~ Ecosystem_type - 1,
+                      #
+                      method = "REML")
 
 Coef_meta_Ag <- coef(summary(ma_model_Ag))
 print(summary(ma_model_Ag))
@@ -284,5 +293,3 @@ forest(Coef_meta_Ag$estimate,ci.lb = Coef_meta_Ag$ci.lb,
 title(main="Manipulation effects in agriculture soil")
 funnel(ma_model_Ag)
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
