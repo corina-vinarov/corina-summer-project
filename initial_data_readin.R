@@ -243,13 +243,10 @@ Coef_meta_Ag <- coef(summary(ma_model_Ag))
 
 print(summary(ma_model_Ag))
 
-# why won't this work!
-#
+
 forest(Coef_meta_Ag$estimate,ci.lb = Coef_meta_Ag$ci.lb,
-       ci.ub = Coef_meta_Ag$ci.ub  ,
-       annotate = TRUE,slab=c("Agriculture"),title("Manipulation effect in agriculture soil"))
-#
-#
+       ci.ub = Coef_meta_Ag$ci.ub , annotate = TRUE,slab=c("Agriculture"))
+
 
 title(main="Manipulation effects in agriculture soil")
 funnel(ma_model_Ag)

@@ -239,7 +239,7 @@ Manip_model <- rma.mv(yi, vi, data = Manip_type,
 Coef_meta_Manip <- coef(summary(Manip_model))
 print(summary(Manip_model))
 
-#Manipulation effects in agriculture soil
+#fertilization effects in agriculture soil
 Ag_mp_data <- filter(data4meta, Ecosystem_type == 'Agriculture', Manipulation_V2 == 'Fertilization')
 Ag_type<- escalc(n1i = Control_N, n2i = Manip_N,
                  m1i = Control, m2i = Manip,
@@ -282,15 +282,9 @@ funnel(Manip_model)
 
 #fertilization and agricultural soils
 
-# why won't this work!
-#
-forest(Coef_meta_Ag$estimate,ci.lb = Coef_meta_Ag$ci.lb,
-       ci.ub = Coef_meta_Ag$ci.ub ,
-       annotate = TRUE,slab=c("Agriculture"),title("Manipulation effect in agriculture soil"))
-#
-#
 
-title(main="Manipulation effects in agriculture soil")
+forest(Coef_meta_Ag$estimate,ci.lb = Coef_meta_Ag$ci.lb,
+       ci.ub = Coef_meta_Ag$ci.ub , annotate = TRUE,slab=c("Agriculture"))
 funnel(ma_model_Ag)
 
 ```
