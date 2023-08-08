@@ -236,15 +236,21 @@ Ag_type<- escalc(n1i = Control_N, n2i = Manip_N,
 
 ma_model_Ag <- rma.mv(yi, vi, data = Ag_type,
                      random = ~ 1 | Study_number,
-                    mods = ~ Manipulation_V2 - 1,
+                    #mods = ~ Manipulation_V2 - 1,
                      method = "REML")
 
 Coef_meta_Ag <- coef(summary(ma_model_Ag))
 
 print(summary(ma_model_Ag))
+
+# why won't this work!
+#
 forest(Coef_meta_Ag$estimate,ci.lb = Coef_meta_Ag$ci.lb,
-       ci.ub = Coef_meta_Ag$ci.ub ,
+       ci.ub = Coef_meta_Ag$ci.ub  ,
        annotate = TRUE,slab=c("Agriculture"),title("Manipulation effect in agriculture soil"))
+#
+#
+
 title(main="Manipulation effects in agriculture soil")
 funnel(ma_model_Ag)
 
